@@ -1,0 +1,71 @@
+from manim import *
+
+class OrbitPlanet(Scene):
+    def construct(self):
+        # Bintang sebagai pusat
+        star = Dot(point=ORIGIN, color=YELLOW).scale(3)
+        star_label = Text("Bintang", font_size=24).next_to(star, DOWN)
+
+        # Orbit 1
+        orbit1 = Circle(radius=3, color=PINK)
+        orbit1.move_to(ORIGIN)
+
+        # Orbit 2
+        orbit2 = Circle(radius=2, color=PURPLE)
+        orbit2.move_to(ORIGIN)
+
+        # Orbit 3
+        orbit3 = Circle(radius=4, color=GREEN)
+
+        # Orbit 4
+        orbit4 = Ellipse(width=5, height=3, color=WHITE)
+
+        offset = RIGHT * 3 
+        orbit4.shift(offset)
+
+        # Planet
+        planet1 = Dot(point=orbit1.point_at_angle(0), color=BLUE).scale(2)
+
+        planet2 = Dot(point=orbit2.point_at_angle(0), color=RED).scale(1.5)
+
+        planet3 = Dot(point=orbit3.point_at_angle(0), color=ORANGE).scale(1.8)
+
+        # Objek Komet
+        komet = Dot(point=orbit4.point_at_angle(0), color=WHITE).scale(1.2)
+
+        # Label untuk planet
+        planet_label = Text("Bumi", font_size=24).next_to(planet1, DOWN)
+        planet_label2 = Text("Merkurius", font_size=24).next_to(planet2, UP)
+        planet_label3 = Text("Mars", font_size=24).next_to(planet3, UP)
+
+        self.play(
+            FadeIn(star), Write(star_label),
+            Create(orbit1), FadeIn(planet1), Write(planet_label),
+            Create(orbit2), FadeIn(planet2), Write(planet_label2),
+            Create(orbit3), FadeIn(planet3), Write(planet_label3),
+            Create(orbit4), FadeIn(komet)
+        )
+        self.wait(1)
+
+        # Animasi planet mengorbit
+        planet_path = MoveAlongPath(planet1, orbit1, rate_func=linear, run_time=16)
+        planet_path2 = MoveAlongPath(planet2, orbit2, rate_func=linear, run_time=12)
+        planet_path3 = MoveAlongPath(planet3, orbit3, rate_func=linear, run_time=20)
+        komet_path = MoveAlongPath(komet, orbit4, rate_func=linear, run_time=10)
+
+        # animasi label planet
+        planet_label.add_updater(lambda m: m.next_to(planet1, DOWN))
+        planet_label2.add_updater(lambda m: m.next_to(planet2, UP))
+        planet_label3.add_updater(lambda m: m.next_to(planet3, UP))
+        
+        # Jalankan animasi
+        for _ in range(2):
+            self.play(
+                planet_path, 
+                planet_path2, 
+                planet_path3,
+                komet_path,
+                rate_func=linear
+            )
+        
+        self.wait(2)
